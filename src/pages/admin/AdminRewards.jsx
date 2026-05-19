@@ -63,6 +63,16 @@ export default function AdminRewards() {
     }
   }
 
+  const handleApproveRedemption = async (id) => {
+    try {
+      await rewardAPI.approveRedemption(id)
+      setRedemptions((prev) => prev.map((r) => r.id === id ? { ...r, status: 'used' } : r))
+      toast.success('Redemption approved!')
+    } catch {
+      toast.error('Failed to approve redemption')
+    }
+  }
+
   const rewardColumns = [
     { key: 'icon', label: '', render: (v) => <span className="text-2xl">{v}</span> },
     { key: 'stamps', label: 'Stamps Required', sortable: true, render: (v) => <span className="text-amber-400 font-bold">{v}</span> },
@@ -84,6 +94,17 @@ export default function AdminRewards() {
     { key: 'rewardName', label: 'Reward', render: (v) => <span className="text-white font-medium">{v}</span> },
     { key: 'redeemedAt', label: 'Redeemed At', sortable: true, render: (v) => formatDateTime(v) },
     { key: 'status', label: 'Status', render: (v) => <span className={v === 'used' ? 'badge-green' : 'badge-gold'}>{v}</span> },
+    {
+      key: 'id', label: 'Actions',
+      render: (_, row) => row.status === 'pending' ? (
+        <button
+          onClick={() => handleApproveRedemption(row.id)}
+          className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+        >
+          <CheckCircle2 size={13} /> Approve
+        </button>
+      ) : null,
+    },
   ]
 
   return (

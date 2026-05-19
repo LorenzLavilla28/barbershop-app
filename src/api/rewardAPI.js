@@ -46,4 +46,12 @@ export const rewardAPI = {
     Object.assign(mockRewards[idx], data)
     return { reward: mockRewards[idx] }
   },
+
+  approveRedemption: async (redemptionId) => {
+    await delay(400)
+    const idx = mockRedemptions.findIndex((r) => r.id === redemptionId)
+    if (idx === -1) throw new Error('Redemption not found')
+    mockRedemptions[idx].status = 'used'
+    return { redemption: mockRedemptions[idx] }
+  },
 }

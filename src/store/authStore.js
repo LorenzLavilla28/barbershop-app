@@ -44,6 +44,14 @@ const useAuthStore = create(
         }
       },
 
+      deductStamps: (count) => {
+        const currentUser = get().user
+        if (currentUser) {
+          const newStamps = Math.max((currentUser.stamps || 0) - count, 0)
+          set({ user: { ...currentUser, stamps: newStamps } })
+        }
+      },
+
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
       clearError: () => set({ error: null }),

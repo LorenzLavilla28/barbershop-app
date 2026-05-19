@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 import { formatDateTime } from '../utils/helpers'
 
 export default function Rewards() {
-  const { user, addStamp } = useAuthStore()
+  const { user, deductStamps } = useAuthStore()
   const [rewards, setRewards] = useState([])
   const [redemptions, setRedemptions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -33,6 +33,7 @@ export default function Rewards() {
     setIsRedeeming(true)
     try {
       const { redemption } = await rewardAPI.redeem(user.id, redeemTarget.id)
+      deductStamps(redeemTarget.stamps)
       setRedemptions([redemption, ...redemptions])
       setRedeemTarget(null)
       toast.success(`Reward redeemed! Bring this confirmation to the shop.`)

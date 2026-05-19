@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone'
 import { Smartphone, Building2, Upload, CheckCircle2, X, AlertCircle } from 'lucide-react'
 import Modal from '../common/Modal'
 import { paymentAPI } from '../../api/paymentAPI'
+import { appointmentAPI } from '../../api/appointmentAPI'
 import { formatCurrency } from '../../utils/helpers'
 import toast from 'react-hot-toast'
 import clsx from 'clsx'
@@ -50,6 +51,11 @@ export default function PaymentModal({ isOpen, onClose, appointment, onPaymentSu
     setIsSubmitting(true)
     try {
       await paymentAPI.submitPaymentProof(appointment?.id, uploadedFile, method)
+      await appointmentAPI.uploadPaymentProof(appointment?.id, {
+        method,
+        fileName: uploadedFile.name,
+        submittedAt: new Date().toISOString(),
+      })
       setStep('done')
       toast.success('Payment proof submitted! Admin will verify shortly.')
     } catch {
